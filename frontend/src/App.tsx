@@ -1,5 +1,6 @@
 import { Building2, Info, MessageSquareWarning, PhoneCall, Type } from "lucide-react";
 import { lazy, Suspense, useEffect, useState } from "react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { COUNTRIES, Logo, Spinner } from "./components/ui";
 import { ensureUser } from "./lib/firebase";
 import { LANG_LABELS } from "./lib/i18n";
@@ -55,7 +56,7 @@ export default function App() {
             </div>
           </a>
 
-          <nav className="order-3 -mx-1 flex w-full gap-1 overflow-x-auto sm:order-none sm:mx-0 sm:w-auto sm:flex-1 sm:justify-center">
+          <nav className="no-scrollbar order-3 -mx-1 flex w-full gap-1 overflow-x-auto lg:order-none lg:mx-0 lg:w-auto lg:flex-1 lg:justify-center">
             {nav.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
@@ -110,12 +111,14 @@ export default function App() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
+        <ErrorBoundary key={route}>
         <Suspense fallback={<div className="flex justify-center py-20 text-brand-700"><Spinner className="h-8 w-8" /></div>}>
           {route === "check" && <CheckPage />}
           {route === "live" && <LivePage />}
           {route === "intel" && <IntelPage />}
           {route === "how" && <HowPage />}
         </Suspense>
+        </ErrorBoundary>
       </main>
 
       <footer className="border-t border-brand-100 py-6 text-center text-xs text-slate-500">

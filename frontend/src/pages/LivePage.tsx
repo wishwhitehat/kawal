@@ -54,7 +54,9 @@ export default function LivePage() {
   const speakRef = useRef(speakOut);
   speakRef.current = speakOut;
 
-  useEffect(() => transcriptEnd.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }), [lines]);
+  useEffect(() => {
+    transcriptEnd.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [lines]);
   useEffect(() => () => teardown(), []);
 
   useEffect(() => {
