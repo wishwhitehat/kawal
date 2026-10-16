@@ -25,7 +25,11 @@ repository. We aim to acknowledge reports within 72 hours.
 
 - **Identity:** Firebase Authentication (anonymous) - every REST call and WebSocket carries a Firebase ID token
   verified server-side with the Firebase Admin SDK.
-- **Abuse:** per-user rate limits, upload MIME allow-list and 8 MB cap, Cloud Run instance cap, monthly budget alert.
+- **App attestation:** Firebase App Check (reCAPTCHA Enterprise) is required by the API and enforced on Firestore
+  and Firebase Auth, so only the genuine web app can use the backend.
+- **Abuse & cost:** per-minute limits, daily global / per-user / per-IP quotas, a budget-driven kill switch,
+  upload allow-list with magic-byte sniffing and per-type size caps, output-token caps - see
+  [docs/COST_CONTROLS.md](docs/COST_CONTROLS.md).
 - **Transport & browser:** HTTPS only, HSTS, strict Content-Security-Policy, `X-Frame-Options: DENY`,
   `nosniff`, CORS and WebSocket `Origin` allow-lists.
 - **Data access:** Firestore Security Rules allow browsers to *read* only aggregated, redacted collections
@@ -36,6 +40,16 @@ repository. We aim to acknowledge reports within 72 hours.
 - **AI safety:** submitted content is treated as untrusted (prompt-injection guard), outputs are schema-bound and
   clamped to a fixed taxonomy, hotline numbers come from a static reviewed table, and Web Risk overrides the model
   when a link is known-malicious.
+
+## Repository hygiene
+
+- No credentials in the repository: `.env*`, `*.tfvars`, Terraform state, keys and credential files are git-ignored.
+- History scanned with **gitleaks v8.30.1** - no leaks. A `pre-commit` hook runs gitleaks before every commit
+  (`pip install pre-commit && pre-commit install`).
+- GitHub secret scanning with push protection, Dependabot alerts / security updates and a ruleset that blocks
+  force-pushes and deletion of `main` are enabled.
+- The Firebase web API key that ships inside the built JavaScript is *public by design*; it is restricted to our
+  domains and to the Firebase APIs, and is never committed.
 
 ## Supported versions
 

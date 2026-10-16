@@ -1,0 +1,18 @@
+flowchart LR
+  U["Request"] --> AC{"App Check<br/>reCAPTCHA Enterprise"}
+  AC -->|no / invalid| X1["401"]
+  AC --> AUTH{"Firebase ID token"}
+  AUTH -->|no / invalid| X2["401"]
+  AUTH --> KS{"Kill switch<br/>config/runtime.paused"}
+  KS -->|paused| X3["503 - paused to stay in budget"]
+  KS --> RL{"Per-minute limit<br/>per user"}
+  RL -->|burst| X4["429"]
+  RL --> C{"Cache hit?<br/>(24 h)"}
+  C -->|yes| OK1["Instant result<br/>no model cost"]
+  C -->|no| Q{"Daily quota<br/>global · user · IP"}
+  Q -->|exceeded| X5["429 - daily limit"]
+  Q --> V{"Input checks<br/>size · type sniffing"}
+  V -->|bad| X6["400 / 413 / 415"]
+  V --> G["Gemini call<br/>trimmed context<br/>max output tokens"]
+  B["Cloud Billing budget<br/>MYR 20 / month"] -->|Pub/Sub| BR["/internal/budget"]
+  BR -->|spend ≥ 100%| KS
