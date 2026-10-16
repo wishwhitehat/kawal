@@ -11,7 +11,7 @@ screenshots in English, Bahasa Melayu and 中文, and turns every check into red
 for banks and regulators.
 
 [![Live demo](https://img.shields.io/badge/Live%20demo-kawal--ai.web.app-6d28d9?style=for-the-badge)](https://kawal-ai.web.app)
-[![Demo video](https://img.shields.io/badge/Demo%20video-3%20min-111827?style=for-the-badge&logo=youtube)](#-links)
+[![Demo video](https://img.shields.io/badge/Demo%20video-3%20min-111827?style=for-the-badge&logo=youtube)](https://drive.google.com/file/d/1wYByug6AXhn4cdVww69Z02nbbA-v2ERV/view?usp=drive_link)
 
 ![Gemini](https://img.shields.io/badge/Gemini-3.8%20Flash%20%C2%B7%203.8%20Live-8E75B2?logo=googlegemini&logoColor=white)
 ![Cloud Run](https://img.shields.io/badge/Cloud%20Run-API%20%2B%20WebSockets-4285F4?logo=googlecloud&logoColor=white)
@@ -40,7 +40,7 @@ Google Cloud **AI Builder Cup 2026** · Track: **BFSI - Intelligent Risk, Fraud 
 |---|---|
 | **Live prototype** | https://kawal-ai.web.app |
 | **API (Cloud Run)** | https://kawal-api-gb6wisvuia-as.a.run.app/api/health · [OpenAPI docs](https://kawal-api-gb6wisvuia-as.a.run.app/api/docs) |
-| **Demo video** | _added at submission_ |
+| **Demo video** | https://drive.google.com/file/d/1wYByug6AXhn4cdVww69Z02nbbA-v2ERV/view?usp=drive_link |
 | **Pitch deck content** | [docs/PITCH_DECK.md](docs/PITCH_DECK.md) · [demo script](docs/DEMO_SCRIPT.md) · [submission text](docs/SUBMISSION.md) |
 | **Architecture deep-dive** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [cost & abuse controls](docs/COST_CONTROLS.md) · [handover guide](docs/HANDOVER.md) |
 | **Benchmarks** | [docs/BENCHMARK.md](docs/BENCHMARK.md) |

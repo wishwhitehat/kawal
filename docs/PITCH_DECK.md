@@ -234,7 +234,7 @@ Caveat: small, team-labelled set - a larger, independently labelled evaluation i
 ## Slide 14 - Links
 
 - **GitHub public repository:** https://github.com/wishwhitehat/kawal
-- **Demo video (3 minutes):** _paste your YouTube / Drive link_
+- **Demo video (3 minutes):** https://drive.google.com/file/d/1wYByug6AXhn4cdVww69Z02nbbA-v2ERV/view?usp=drive_link
 - **Final product link:** https://kawal-ai.web.app
 
 ## Slide 15 - (spare) - suggested: “Why now / Why Google Cloud”

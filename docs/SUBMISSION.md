@@ -11,7 +11,7 @@ BFSI: Intelligent Risk, Fraud & Financial Experiences
 ## Links
 - **Deployed prototype:** https://kawal-ai.web.app
 - **GitHub repository:** https://github.com/wishwhitehat/kawal
-- **Demo video:** _your YouTube / Drive link_
+- **Demo video:** https://drive.google.com/file/d/1wYByug6AXhn4cdVww69Z02nbbA-v2ERV/view?usp=drive_link
 - **API health (for judges):** https://kawal-api-gb6wisvuia-as.a.run.app/api/health
 
 ## Brief description (≈ 250 words)
