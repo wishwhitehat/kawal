@@ -25,6 +25,12 @@ def _ms(t0: float) -> int:
     return int((time.perf_counter() - t0) * 1000)
 
 
+async def _timed(coro) -> tuple[object, int]:
+    """Run an agent and report its own duration (not when we got round to collecting it)."""
+    t0 = time.perf_counter()
+    return await coro, _ms(t0)
+
+
 async def _skip_evidence() -> dict:
     return {"findings": "", "sources": [], "queries": [], "webRisk": []}
 
@@ -37,9 +43,9 @@ async def check(*, text: str, media: list[tuple[bytes, str]], lang: str, country
     t_ev = time.perf_counter()
     ev_task = None
     if not verify:
-        ev_task = asyncio.create_task(_skip_evidence())
+        ev_task = asyncio.create_task(_timed(_skip_evidence()))
     elif text.strip():
-        ev_task = asyncio.create_task(evidence.run(context=text, urls=extract_urls(text), lang=lang))
+        ev_task = asyncio.create_task(_timed(evidence.run(context=text, urls=extract_urls(text), lang=lang)))
         yield "stage", {"id": "evidence", "status": "running"}
 
     # 1. Triage (multimodal, structured)
@@ -71,12 +77,12 @@ async def check(*, text: str, media: list[tuple[bytes, str]], lang: str, country
             r["value"] if "://" in r["value"] else "http://" + r["value"]
             for r in tri.get("indicators", []) if r.get("kind") == "url"]
         context = f"{tri.get('headline', '')}. {tri.get('extracted_text', '')}"
-        ev_task = asyncio.create_task(evidence.run(context=context, urls=media_urls, lang=lang))
+        ev_task = asyncio.create_task(_timed(evidence.run(context=context, urls=media_urls, lang=lang)))
         yield "stage", {"id": "evidence", "status": "running"}
     yield "stage", {"id": "intel", "status": "running"}
     t0 = time.perf_counter()
-    in_task = asyncio.create_task(intel.run(summary_en=tri.get("summary_en", ""), scam_type=tri["scam_type"],
-                                            pattern_name=tri.get("pattern_name", ""), indicators=indicators))
+    in_task = asyncio.create_task(_timed(intel.run(summary_en=tri.get("summary_en", ""), scam_type=tri["scam_type"],
+                                                   pattern_name=tri.get("pattern_name", ""), indicators=indicators)))
     pending = {ev_task: "evidence", in_task: "intel"}
     results: dict[str, object] = {}
     while pending:
@@ -84,8 +90,8 @@ async def check(*, text: str, media: list[tuple[bytes, str]], lang: str, country
         for task in done:
             name = pending.pop(task)
             try:
-                results[name] = task.result()
-                yield "stage", {"id": name, "status": "done", "ms": _ms(t_ev if name == "evidence" else t0)}
+                results[name], took = task.result()
+                yield "stage", {"id": name, "status": "done", "ms": took}
             except Exception:
                 log.exception("%s agent failed", name)
                 results[name] = None
