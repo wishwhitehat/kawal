@@ -1,0 +1,78 @@
+===== macau-scam-ms
+[  1.7] {'type': 'ready', 'model': 'gemini-3.8-live'}
+[ 11.1] {"type": "transcript", "text": "Hello, selamat petang. Saya Inspektor Razak dari Ibu Pejabat Polis Bukit Aman, Bahagian Jenayah Komersial.", "t": 11.0}
+[ 11.3] {"type": "signal", "tactic": "authority_impersonation", "label": "Claims to be police, a court, a regulator or a bank", "evidence": "Saya Inspektor Razak dari Ibu Pejabat Polis Bukit
+[ 14.1] {"type": "transcript", "text": "Ya, kenapa ya tuan?", "t": 14.0}
+[ 22.2] {"type": "transcript", "text": "Nama puan ada dalam siasatan kes pengubahan wang haram. Akaun bank puan digunakan untuk terima RM200,000.", "t": 22.1}
+[ 22.3] {"type": "signal", "tactic": "fear_threat", "label": "Threatens arrest, fines, account freeze or harm", "evidence": "Nama puan ada dalam siasatan kes pengubahan wang haram. Akaun ban
+[ 22.3] {"type": "alert", "risk": 75, "text": "Jangan panik, pemanggil baru memperkenalkan diri dan belum membuat sebarang tuduhan atau permintaan wang."}
+[ 23.0] {"type": "kawal_said", "text": "Ini satu penipuan,"}
+[ 26.5] {"type": "transcript", "text": "Apa? Saya tak tahu apa-apa pun.", "t": 26.4}
+[ 26.6] {"type": "kawal_said", "text": "Sila letak telefon"}
+[ 27.3] {"type": "kawal_said", "text": "Sila letak telefon sekarang, jangan"}
+[ 36.9] {"type": "transcript", "text": "Ini kes sangat serius. Jangan beritahu sesiapa. Termasuk keluarga. Kalau tidak, puan boleh ditangkap hari ini juga.", "t": 36.7}
+[ 37.3] {"type": "kawal_said", "text": "Jangan dedahkan maklumat"}
+[ 39.2] {"type": "signal", "tactic": "secrecy_isolation", "label": "Tells you not to tell family, friends or the bank", "evidence": "Jangan beritahu sesiapa. Termasuk keluarga.", "risk": 90,
+[ 43.9] {"type": "transcript", "text": "Untuk lindungi duit puan, puan perlu pindahkan semua simpanan ke akaun selamat Bank Negara yang saya berikan.", "t": 43.8}
+[ 44.0] {"type": "signal", "tactic": "safe_account", "label": "Asks you to move money to a 'safe' or 'holding' account", "evidence": "Untuk lindungi duit puan, puan perlu pindahkan semua sim
+[ 44.7] {"type": "kawal_said", "text": "Ini satu penipuan,"}
+[ 46.9] {"type": "transcript", "text": "Berapa saya perlu pindah?", "t": 46.8}
+[ 47.1] {"type": "kawal_said", "text": "Sila letak telefon"}
+[ 49.7] {"type": "alert", "risk": 98, "text": "Letak telefon segera; polis tidak akan mengarahkan anda memindahkan wang ke akaun selamat."}
+[ 53.0] {"type": "transcript", "text": "Semua sekali, sekarang juga, dalam masa 30 minit, jangan letak telefon.", "t": 52.9}
+[ 53.3] {"type": "kawal_said", "text": "Jangan pindahkan"}
+[ 54.0] {"type": "kawal_said", "text": "Jangan pindahkan duit, letak"}
+[ 55.0] {"type": "kawal_said", "text": "Jangan pindahkan duit, letak telefon dan hubungi"}
+[ 57.0] {"type": "summary", "verdict": "scam", "headline": "Panggilan Penipuan Menyamar Polis", "userMessage": "Jangan percaya! Ini adalah taktik penipuan menyamar sebagai pegawai polis. Pih
+spoken warning audio: 5.0s; first alert at 22.250886917114258s; audio length 50.6s
+===== bank-impersonation-en
+[  1.7] {'type': 'ready', 'model': 'gemini-3.8-live'}
+[ 11.9] {"type": "transcript", "text": "Good morning. This is Daniel from the fraud prevention team at your bank. We detected a suspicious login to your account from Vietnam.", "t": 11.8}
+[ 12.0] {"type": "signal", "tactic": "authority_impersonation", "label": "Claims to be police, a court, a regulator or a bank", "evidence": "Good morning. This is Daniel from the fraud preve
+[ 15.8] {"type": "transcript", "text": "Oh no, what should I do?", "t": 15.6}
+[ 25.0] {"type": "transcript", "text": "Don't worry, I can secure it for you right now. You will receive a six-digit code by SMS. Please read it to me so I can block the transaction.", "t": 
+[ 25.1] {"type": "signal", "tactic": "credential_request", "label": "Asks for passwords, PIN, TAC/OTP or card details", "evidence": "You will receive a six-digit code by SMS. Please read it 
+[ 25.1] {"type": "alert", "risk": 85, "text": "Hang up and call the official customer service number on the back of your bank card to verify."}
+[ 25.9] {"type": "kawal_said", "text": "This is a"}
+[ 28.1] {"type": "signal", "tactic": "fear_threat", "label": "Threatens arrest, fines, account freeze or harm", "evidence": "We detected a suspicious login to your account from Vietnam.", "r
+[ 28.9] {"type": "transcript", "text": "Okay, it says 482.", "t": 28.8}
+[ 36.8] {"type": "transcript", "text": "Good. Next, please install the app called SecureAssist from the link I am sending. It lets our technician protect your phone remotely.", "t": 36.7}
+[ 37.0] {"type": "signal", "tactic": "remote_access", "label": "Asks you to install an app or share your screen", "evidence": "Next, please install the app called SecureAssist from the link 
+[ 37.7] {"type": "kawal_said", "text": "This is a scam"}
+[ 39.6] {"type": "signal", "tactic": "spoofed_identity", "label": "Sender identity or number looks spoofed or inconsistent", "evidence": "Good morning. This is Daniel from the fraud preventi
+[ 39.6] {"type": "signal", "tactic": "urgency_pressure", "label": "Creates time pressure: act now, minutes left", "evidence": "Don't worry, I can secure it for you right now.", "risk": 98, "
+[ 43.3] {"type": "transcript", "text": "You must do this in the next 10 minutes, otherwise the hacker will empty your savings.", "t": 43.2}
+[ 47.5] {"type": "summary", "verdict": "scam", "headline": "Fake Bank Fraud Prevention Call", "userMessage": "Do not share verification codes or install remote access apps. Hang up and call 
+spoken warning audio: 3.0s; first alert at 25.132485151290894s; audio length 41.3s
+===== parcel-police-zh
+[  1.6] {'type': 'ready', 'model': 'gemini-3.8-live'}
+[ 11.2] {"type": "transcript", "text": "你好, 这里是顺丰快递。你有一个寄往上海的包裹被海关扣留了, 里面发现了 12 本假护照。", "t": 11.0}
+[ 11.6] {"type": "signal", "tactic": "authority_impersonation", "label": "Claims to be police, a court, a regulator or a bank", "evidence": "这里是顺丰快递。你有一个寄往上海�
+[ 11.6] {"type": "alert", "risk": 75, "text": ""}
+[ 12.9] {"type": "signal", "tactic": "fear_threat", "label": "Threatens arrest, fines, account freeze or harm", "evidence": "里面发现了 12 本假护照", "risk": 75, "t": 12.7, "by": "d
+[ 15.0] {"type": "transcript", "text": "什么? 我没有寄过包裹啊。", "t": 14.9}
+[ 15.3] {"type": "kawal_said", "text": "这是诈骗，请立刻挂断，"}
+[ 21.8] {"type": "transcript", "text": "那您的身份可能被盗用了。我现在帮您转接上海公安局的王警官。", "t": 21.6}
+[ 21.9] {"type": "signal", "tactic": "authority_impersonation", "label": "Claims to be police, a court, a regulator or a bank", "evidence": "我现在帮您转接上海公安局的王警官�
+[ 23.9] {"type": "transcript", "text": "我是王警官。", "t": 23.8}
+[ 30.0] {"type": "transcript", "text": "涉嫌洗钱案件, 现在有逮捕令。这件事是保密的, 不可以告诉家人。", "t": 29.9}
+[ 30.3] {"type": "signal", "tactic": "fear_threat", "label": "Threatens arrest, fines, account freeze or harm", "evidence": "涉嫌洗钱案件, 现在有逮捕令。这件事是保密的, �
+[ 32.6] {"type": "transcript", "text": "我该怎么办？", "t": 32.4}
+[ 33.2] {"type": "signal", "tactic": "secrecy_isolation", "label": "Tells you not to tell family, friends or the bank", "evidence": "这件事是保密的, 不可以告诉家人", "risk": 90
+[ 43.1] {"type": "transcript", "text": "为了证明你的清白, 你需要把账户里所有的钱转到我们的安全监管账户。调查结束后会退还给你, 今天之内必须完�
+[ 43.2] {"type": "signal", "tactic": "safe_account", "label": "Asks you to move money to a 'safe' or 'holding' account", "evidence": "你需要把账户里所有的钱转到我们的安全�
+[ 43.2] {"type": "alert", "risk": 95, "text": "这是典型的冒充公检法诈骗，请立即挂断电话，切勿泄露个人信息或转账。"}
+[ 45.7] {"type": "signal", "tactic": "urgency_pressure", "label": "Creates time pressure: act now, minutes left", "evidence": "今天之内必须完成", "risk": 98, "t": 45.6, "by": "deep"}
+[ 47.0] {"type": "summary", "verdict": "scam", "headline": "冒充快递与公检法诈骗", "userMessage": "这是典型的冒充公检法诈骗！顺丰快递和公安局绝不会通过电
+spoken warning audio: 2.6s; first alert at 11.647875785827637s; audio length 40.8s
+===== legit-bank-en
+[  1.7] {'type': 'ready', 'model': 'gemini-3.8-live'}
+[ 11.1] {"type": "transcript", "text": "Hello, this is Isaac from the card services team. I'm calling about a declined card payment at an electronics store at 2:00 p.m. today.", "t": 11.0}
+[ 15.6] {"type": "transcript", "text": "Yes, that was me. I was buying a laptop.", "t": 15.5}
+[ 26.5] {"type": "transcript", "text": "Thank you. I won't ask for your PIN, password, or one-time code. If you'd like to verify me, you can hang up and call the number on the back of your c
+[ 30.4] {"type": "transcript", "text": "That's fine. I'll call the hotline later.", "t": 30.2}
+[ 36.9] {"type": "transcript", "text": "Of course. Your card is not blocked and you can retry the purchase anytime. Have a good day.", "t": 36.8}
+[ 41.1] {"type": "summary", "verdict": "likely_safe", "headline": "Card Services Verification Call", "userMessage": "This call appeared to be legitimate as the caller did not ask for sensiti
+spoken warning audio: 0.0s; first alert at Nones; audio length 34.9s
+
+[exited with code 0]

@@ -1,0 +1,33 @@
+sequenceDiagram
+  autonumber
+  participant U as User's browser
+  participant R as Cloud Run (WebSocket)
+  participant L as Gemini 3.8 Live
+  participant F as Gemini Flash-Lite
+  participant D as Firestore
+
+  U->>R: start {Firebase ID token, lang, country}
+  R->>R: verify token, origin, rate limit
+  R->>L: open Live session (tools, transcription, proactive audio)
+  loop every 100 ms
+    U->>R: PCM16 audio chunk
+    R->>L: realtime audio
+  end
+  L-->>R: input transcription
+  R-->>U: transcript line
+  L-->>R: tool call flag_scam_signal(tactic, quote, risk)
+  R-->>U: signal chip + risk meter
+  par every 2.5 s
+    R->>F: rolling transcript → risk, scam type, kill-chain stage
+    F-->>R: structured score
+    R-->>U: risk update
+  end
+  alt risk ≥ 70
+    R-->>U: ALERT (full-screen, hotline)
+    L-->>R: spoken warning (gated by risk)
+    R-->>U: audio 24 kHz
+  end
+  U->>R: stop
+  R->>F: summarise call
+  R->>D: save redacted session + campaign report (no audio, no transcript)
+  R-->>U: summary

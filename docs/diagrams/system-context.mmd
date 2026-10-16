@@ -1,0 +1,24 @@
+flowchart TB
+  citizen(["👵 Citizen<br/>(possible victim)"])
+  analyst(["🏦 Bank fraud analyst<br/>/ regulator"])
+
+  subgraph kawal["Kawal on Google Cloud"]
+    web["Web app<br/>Firebase Hosting"]
+    api["kawal-api<br/>Cloud Run"]
+    db[("Firestore")]
+  end
+
+  gemini["Gemini models<br/>(Vertex AI)"]
+  search["Google Search"]
+  webrisk["Web Risk"]
+  hotline["National scam hotlines<br/>NSRC 997 · ScamShield 1799 · CICC 1326 …"]
+
+  citizen -->|"messages, screenshots,<br/>voice notes, live calls"| web
+  analyst -->|"console, bulletins,<br/>questions"| web
+  web <--> api
+  api <--> gemini
+  gemini --> search
+  api --> webrisk
+  api <--> db
+  web -. "real-time listeners" .-> db
+  web -->|"one-tap call"| hotline

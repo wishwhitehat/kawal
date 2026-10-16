@@ -1,0 +1,27 @@
+flowchart TB
+  subgraph gcp["Google Cloud project"]
+    subgraph sg["asia-southeast1 (Singapore)"]
+      RUN["Cloud Run: kawal-api<br/>min 1 / max 4 · 1 vCPU · 1 GiB<br/>timeout 3600 s · session affinity"]
+      AR["Artifact Registry: kawal"]
+      FS[("Firestore (default)<br/>vector index · TTL · rules")]
+      SM["Secret Manager<br/>kawal-indicator-pepper"]
+    end
+    subgraph glob["Global"]
+      HOST["Firebase Hosting: kawal-ai.web.app<br/>CSP · HSTS"]
+      AUTH["Identity Platform<br/>anonymous sign-in"]
+      KEY["API key (browser)<br/>referrer + API restricted"]
+      VX["Vertex AI: Gemini (global)"]
+      MON["Uptime check · budget alert"]
+    end
+    VXL["Vertex AI: Gemini Live (us-central1)"]
+    CB["Cloud Build"]
+    SA["SA kawal-api<br/>aiplatform.user · datastore.user<br/>logging · monitoring · trace"]
+  end
+  TF["Terraform state<br/>GCS bucket (versioned, private)"]
+
+  CB --> AR --> RUN
+  RUN -. "runs as" .-> SA
+  RUN --> FS & VX & VXL
+  SM -. "env secret" .-> RUN
+  HOST --> RUN
+  TF -.-> gcp

@@ -183,7 +183,7 @@ export default function LivePage() {
         <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600">{t("liveSub")}</p>
       </section>
 
-      {!active && (
+      {phase === "idle" && (
         <Card className="mx-auto max-w-4xl p-4 sm:p-6">
           <div className="grid gap-3 sm:grid-cols-2">
             <button onClick={() => setMode("sample")} className={`rounded-xl border-2 p-4 text-left ${mode === "sample" ? "border-brand-600 bg-brand-50" : "border-brand-100"}`}>

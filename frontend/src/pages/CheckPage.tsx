@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { Card, FLAG, KillChainBar, Pill, RiskGauge, SectionTitle, Spinner, VERDICT_STYLE } from "../components/ui";
 import { runCheck, speak } from "../lib/api";
 import { usePrefs } from "../lib/prefs";
+import { plain } from "../lib/text";
 import type { CheckResult, StageEvent } from "../lib/types";
 
 const EXAMPLES = [
@@ -298,7 +299,7 @@ function ResultView({ r, stages, onReset }: { r: CheckResult; stages: StageMap; 
           {r.evidence.findings ? (
             <div className="space-y-1.5 text-sm leading-relaxed text-slate-700">
               {r.evidence.findings.split("\n").filter(Boolean).map((line, i) => (
-                <p key={i}>{line.replace(/^[-*•]\s*/, "• ").replace(/\*\*/g, "")}</p>
+                <p key={i}>{plain(line.replace(/^[-*•]\s*/, "• "))}</p>
               ))}
             </div>
           ) : (

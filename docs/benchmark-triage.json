@@ -1,0 +1,323 @@
+{
+  "model": "gemini-3.8-flash",
+  "n": 30,
+  "scams": 20,
+  "legit": 10,
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "false_positive_rate": 0.0,
+  "latency_ms": {
+    "p50": 5309.0,
+    "p95": 6691,
+    "max": 8222
+  },
+  "confusion": {
+    "tp": 20,
+    "tn": 10,
+    "fp": 0,
+    "fn": 0
+  },
+  "rows": [
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 99,
+      "type": "prize_lottery",
+      "ms": 5336,
+      "lang": "en",
+      "text": "Congratulations! Your number won RM10,000 in the Petronas Mesra lucky "
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "authority_impersonation",
+      "ms": 5828,
+      "lang": "ms",
+      "text": "Saya dari JPJ. Saman tertunggak RM300 anda akan dibawa ke mahkamah. Ba"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "phishing",
+      "ms": 6060,
+      "lang": "ms",
+      "text": "Akaun Bank Islam anda telah disekat. Sila log masuk di bislam-semakan."
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "parcel_courier",
+      "ms": 5835,
+      "lang": "en",
+      "text": "SingPost: Your package could not be delivered due to an incomplete add"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "phishing",
+      "ms": 8006,
+      "lang": "en",
+      "text": "Hi, this is Agent Wong from Touch 'n Go. Your eWallet is linked to a f"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 100,
+      "type": "authority_impersonation",
+      "ms": 8222,
+      "lang": "zh",
+      "text": "您好，我是马来西亚国家银行的职员。您的账户涉及洗钱，请将存款转到我们的安全账户以配合调查，不要告诉任何人。"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 100,
+      "type": "phishing",
+      "ms": 5087,
+      "lang": "en",
+      "text": "Dear customer, OCBC has detected unauthorised access. Reply with your "
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "job_task",
+      "ms": 4856,
+      "lang": "zh",
+      "text": "兼职招聘：在家给酒店点赞，每单佣金S$5，日赚300新元。先充值100 USDT开通高级任务，联系Telegram @HotelTaskSG"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "investment",
+      "ms": 5282,
+      "lang": "en",
+      "text": "Hi, I'm Sarah, we matched on Coffee Meets Bagel. My uncle is a crypto "
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 95,
+      "type": "family_emergency",
+      "ms": 5061,
+      "lang": "id",
+      "text": "Mama, ini aku ganti nomor. HP-ku hilang. Tolong transfer Rp2 juta ke r"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "bank_impersonation",
+      "ms": 6351,
+      "lang": "id",
+      "text": "BCA: Tarif transfer berubah menjadi Rp150.000/bulan. Jika tidak setuju"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "job_task",
+      "ms": 6691,
+      "lang": "id",
+      "text": "Selamat, Anda terpilih jadi reseller TikTok Shop! Gaji Rp500 ribu per "
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "authority_impersonation",
+      "ms": 5852,
+      "lang": "en",
+      "text": "Thailand Post: Your parcel contains illegal items. Call our customs of"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 100,
+      "type": "phishing",
+      "ms": 6389,
+      "lang": "en",
+      "text": "Maya: Your account will be deactivated. Confirm your MPIN at maya-ph-v"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "phishing",
+      "ms": 5370,
+      "lang": "en",
+      "text": "myGov: You are eligible for a tax refund of $812.40. Claim at mygov-re"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "authority_impersonation",
+      "ms": 4859,
+      "lang": "en",
+      "text": "This is TRAI. Your mobile number will be disconnected in 2 hours due t"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "authority_impersonation",
+      "ms": 5799,
+      "lang": "zh",
+      "text": "【香港海关】您的包裹涉嫌走私，请立即联络我们的警官核实身份，并将资金转到监管账户。"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 100,
+      "type": "investment",
+      "ms": 5950,
+      "lang": "en",
+      "text": "Investment opportunity: Bursa-listed insider tips, guaranteed 20% week"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 100,
+      "type": "loan",
+      "ms": 5409,
+      "lang": "ms",
+      "text": "Pinjaman Mudah Lulus! Tiada dokumen. Hanya bayar duti setem RM200 dahu"
+    },
+    {
+      "label": 1,
+      "pred": 1,
+      "verdict": "scam",
+      "risk": 98,
+      "type": "authority_impersonation",
+      "ms": 5733,
+      "lang": "en",
+      "text": "This is the Ministry of Manpower. Your work pass will be cancelled unl"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 5,
+      "type": "none",
+      "ms": 4887,
+      "lang": "en",
+      "text": "Maybank: RM120.00 has been debited from your account for a DuitNow tra"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 5,
+      "type": "none",
+      "ms": 3941,
+      "lang": "ms",
+      "text": "Pos Malaysia: Bungkusan EN123456789MY anda telah dihantar dan diterima"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 10,
+      "type": "none",
+      "ms": 3701,
+      "lang": "en",
+      "text": "Your Grab verification code is 482913. Do not share this code with any"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 0,
+      "type": "none",
+      "ms": 3523,
+      "lang": "zh",
+      "text": "妈，我今天加班，晚饭不用等我，大概九点到家。"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 10,
+      "type": "none",
+      "ms": 4122,
+      "lang": "en",
+      "text": "DBS: Your OTP for the transaction of S$58.20 at NTUC FairPrice is 7731"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 5,
+      "type": "none",
+      "ms": 3411,
+      "lang": "en",
+      "text": "Reminder: Your dental appointment at Raffles Medical is tomorrow at 10"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 5,
+      "type": "none",
+      "ms": 3096,
+      "lang": "id",
+      "text": "Tokopedia: Pesanan INV/2026/10/1234 sudah dikirim oleh penjual. Lacak "
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 0,
+      "type": "none",
+      "ms": 3267,
+      "lang": "en",
+      "text": "Hi team, the quarterly report deadline has moved to Friday. Please upl"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 5,
+      "type": "none",
+      "ms": 4156,
+      "lang": "en",
+      "text": "Shopee: Your order 2510ABC has been delivered. Rate your purchase in t"
+    },
+    {
+      "label": 0,
+      "pred": 0,
+      "verdict": "likely_safe",
+      "risk": 5,
+      "type": "none",
+      "ms": 5016,
+      "lang": "en",
+      "text": "Hi, it's Dr Patel's clinic. Your blood test results are ready. Please "
+    }
+  ]
+}

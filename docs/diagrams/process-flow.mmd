@@ -1,0 +1,17 @@
+flowchart TD
+  A([Suspicious call or message]) --> B{How did it arrive?}
+  B -->|Phone call| C[Put call on speaker<br/>Start Live Call Guardian]
+  B -->|SMS / WhatsApp / email / link| D[Paste text or upload<br/>screenshot / voice note]
+  C --> E[Gemini 3.8 Live listens<br/>flags tactics in real time]
+  E --> F{Risk ≥ 70?}
+  F -->|No| E
+  F -->|Yes| G[Full-screen alert + spoken warning<br/>in user's language]
+  G --> H[One-tap call to national hotline<br/>Hang up · don't transfer]
+  D --> I[Triage agent · Evidence agent<br/>Community-intel agent]
+  I --> J[Verdict · red flags · kill-chain<br/>sources · action plan]
+  J --> H
+  H --> K[(Redacted report<br/>Firestore)]
+  E --> K
+  K --> L[Campaign clustering<br/>vector search]
+  L --> M[Bank / regulator console<br/>bulletins · Ask Intel]
+  M --> N[Bank controls:<br/>step-up auth · cooling-off · mule blocks]

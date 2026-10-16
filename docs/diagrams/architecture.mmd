@@ -1,0 +1,42 @@
+flowchart LR
+  subgraph Client["Browser - Firebase Hosting"]
+    UI["React SPA<br/>EN · BM · 中文"]
+    MIC["Mic / sample call<br/>AudioWorklet 16 kHz PCM"]
+  end
+
+  subgraph Firebase["Firebase"]
+    AUTH["Authentication<br/>anonymous ID tokens"]
+    RULES["Security Rules<br/>read-only aggregates"]
+  end
+
+  subgraph Run["Cloud Run - kawal-api (asia-southeast1)"]
+    API["FastAPI<br/>SSE + WebSocket"]
+    PIPE["Agent pipeline<br/>Triage · Evidence · Intel · Advice"]
+    LIVE["Live Guardian<br/>fast + deep paths"]
+    INTEL["Bulletin + Analyst agents"]
+  end
+
+  subgraph Gemini["Gemini on Vertex AI"]
+    G38["3.8 Flash<br/>multimodal, JSON, tools"]
+    GLIVE["3.8 Live<br/>native audio, tools"]
+    GLITE["3.5 Flash-Lite<br/>grounding, scoring"]
+    GEMB["Embeddings · TTS"]
+  end
+
+  FS[("Firestore<br/>reports + vectors<br/>indicators · campaigns<br/>stats · feed")]
+  WR["Web Risk API"]
+  GS["Google Search<br/>grounding"]
+  SM["Secret Manager<br/>HMAC pepper"]
+
+  UI -- "ID token" --> AUTH
+  UI -- "POST /api/check (SSE)" --> API
+  MIC -- "WSS /ws/live" --> API
+  UI -- "onSnapshot" --> RULES --> FS
+  API --> PIPE & LIVE & INTEL
+  PIPE --> G38 & GLITE & GEMB & WR
+  GLITE --> GS
+  LIVE <--> GLIVE
+  LIVE --> GLITE
+  INTEL --> G38
+  PIPE & LIVE & INTEL --> FS
+  API -. "pepper" .-> SM
