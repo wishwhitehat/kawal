@@ -1,0 +1,4 @@
+project_id      = "your-gcp-project-id"
+# Optional: enables the monthly budget alert (amount is in the billing account's currency).
+billing_account = ""
+# hosting_site_id = "kawal-ai"   # must be globally unique
