@@ -41,7 +41,7 @@ Google Cloud **AI Builder Cup 2026** · Track: **BFSI - Intelligent Risk, Fraud 
 | **Live prototype** | https://kawal-ai.web.app |
 | **API (Cloud Run)** | https://kawal-api-gb6wisvuia-as.a.run.app/api/health · [OpenAPI docs](https://kawal-api-gb6wisvuia-as.a.run.app/api/docs) |
 | **Demo video** | _added at submission_ |
-| **Pitch deck content** | [docs/PITCH_DECK.md](docs/PITCH_DECK.md) |
+| **Pitch deck content** | [docs/PITCH_DECK.md](docs/PITCH_DECK.md) · [demo script](docs/DEMO_SCRIPT.md) · [submission text](docs/SUBMISSION.md) |
 | **Architecture deep-dive** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 | **Benchmarks** | [docs/BENCHMARK.md](docs/BENCHMARK.md) |
 
@@ -162,14 +162,23 @@ More diagrams (Scam Check pipeline, data model, deployment, security model): **[
 
 ## Results at a glance
 
-Measured on the deployed stack - full method and raw output in [docs/BENCHMARK.md](docs/BENCHMARK.md).
+Measured on the deployed stack on 16 Oct 2026 - method, raw output and caveats in [docs/BENCHMARK.md](docs/BENCHMARK.md).
 
 | Metric | Result |
 |---|---|
-| Live Guardian - first tactic flagged after the caller's sentence ends | **≈ 0.1-0.5 s** |
-| Live Guardian - legitimate bank call (control) | **0 alerts, Kawal stays silent** |
-| Scam Check end-to-end (text, 4 agents) | **≈ 7-9 s**, streamed stage by stage |
-| Scam Check accuracy on a held-out multilingual set | see [BENCHMARK.md](docs/BENCHMARK.md) |
+| Scam Check accuracy - held-out multilingual set (n = 30, EN/BM/中文/ID) | **30 / 30 correct · 0 false positives** on tricky legitimate bank / courier messages |
+| Scam Check end-to-end latency (production, 4 agents, streamed) | **4.1 - 6.9 s** |
+| Live Guardian - reaction after a scam sentence ends | **≈ 0.1 - 0.5 s** (e.g. alert 0.1 s after “read me the 6-digit code”) |
+| Live Guardian - BM / EN / 中文 scam calls | all three flagged, peak risk **98**, spoken warning in the call's language |
+| Live Guardian - genuine bank call (control) | **0 alerts, Kawal stays silent** |
+
+## Screenshots
+
+| Scam Check result | Live Call Guardian |
+|---|---|
+| ![Scam Check result](docs/images/ui-result.png) | ![Live Call Guardian](docs/images/ui-live.png) |
+| **Full-screen alert** | **Intel Console** |
+| ![Scam alert](docs/images/ui-alert.png) | ![Intel Console](docs/images/ui-intel.png) |
 
 ## Privacy & security
 
