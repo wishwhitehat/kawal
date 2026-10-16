@@ -81,3 +81,13 @@ resource "google_firebaserules_release" "firestore" {
     replace_triggered_by = [google_firebaserules_ruleset.firestore]
   }
 }
+
+# TTL for quota counters (usage/{day} + per-user / per-IP sub-collections) and the result cache.
+resource "google_firestore_field" "ttl" {
+  for_each   = toset(["usage", "users", "ips", "cache"])
+  database   = google_firestore_database.default.name
+  collection = each.value
+  field      = "expireAt"
+  ttl_config {}
+  index_config {}
+}

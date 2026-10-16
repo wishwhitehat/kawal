@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Card, FLAG, KillChainBar, Pill, RiskGauge, SectionTitle, Spinner, riskColor } from "../components/ui";
 import { liveSocketUrl } from "../lib/api";
 import { captureMic, captureSample, PcmPlayer, type Capture } from "../lib/audio";
-import { idToken } from "../lib/firebase";
+import { appCheckToken, idToken } from "../lib/firebase";
 import { usePrefs } from "../lib/prefs";
 import type { Hotline, Signal } from "../lib/types";
 
@@ -90,14 +90,14 @@ export default function LivePage() {
     const sampleLang = SAMPLES.find((s) => s.id === sample)?.lang;
     const sessionLang = mode === "sample" && sampleLang ? sampleLang : lang;
     try {
-      const token = await idToken();
+      const [token, appCheck] = await Promise.all([idToken(), appCheckToken()]);
       const sock = new WebSocket(liveSocketUrl());
       sock.binaryType = "arraybuffer";
       ws.current = sock;
       player.current = new PcmPlayer();
 
       sock.onopen = () =>
-        sock.send(JSON.stringify({ type: "start", token, lang: sessionLang, country, speak: speakRef.current, share: true }));
+        sock.send(JSON.stringify({ type: "start", token, appCheck, lang: sessionLang, country, speak: speakRef.current, share: true }));
       sock.onclose = () => {
         cap.current?.stop();
         setPhase((p) => (p === "live" || p === "connecting" ? "done" : p));

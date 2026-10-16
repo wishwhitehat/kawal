@@ -70,6 +70,9 @@ resource "google_apikeys_key" "web" {
     api_targets {
       service = "firebaseinstallations.googleapis.com"
     }
+    api_targets {
+      service = "firebaseappcheck.googleapis.com"
+    }
   }
   depends_on = [google_project_service.apis]
 }

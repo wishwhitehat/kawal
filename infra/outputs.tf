@@ -23,6 +23,7 @@ output "firebase_web_config" {
     authDomain = "${var.project_id}.firebaseapp.com"
     projectId  = var.project_id
     appId      = google_firebase_web_app.web.app_id
+    siteKey    = google_recaptcha_enterprise_key.web.name
   }
   sensitive = true
 }

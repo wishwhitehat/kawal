@@ -85,7 +85,7 @@ async def run(*, text: str, media: list[tuple[bytes, str]], lang: str, country: 
         model=s.model_flash,
         contents=[types.Content(role="user", parts=parts)],
         config=genai_client.json_config(SCHEMA, system=SYSTEM.replace("{lang}", LANGS.get(lang, "English")),
-                                        thinking="LOW"),
+                                        thinking="LOW", max_tokens=4096),
     )
     out = genai_client.parse_json(resp)
     out["_usage"] = {"model": s.model_flash,

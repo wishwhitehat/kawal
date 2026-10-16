@@ -25,7 +25,7 @@ resource "google_cloud_run_v2_service" "api" {
       resources {
         limits = {
           cpu    = "1"
-          memory = "1Gi"
+          memory = "512Mi"
         }
         cpu_idle          = true
         startup_cpu_boost = true
@@ -42,6 +42,30 @@ resource "google_cloud_run_v2_service" "api" {
       env {
         name  = "ALLOWED_ORIGINS"
         value = join(",", local.allowed_origins)
+      }
+      env {
+        name  = "APPCHECK_REQUIRED"
+        value = tostring(var.appcheck_enforce)
+      }
+      env {
+        name  = "GLOBAL_DAILY"
+        value = jsonencode(var.global_daily)
+      }
+      env {
+        name  = "USER_DAILY"
+        value = jsonencode(var.user_daily)
+      }
+      env {
+        name  = "IP_DAILY"
+        value = jsonencode(var.ip_daily)
+      }
+      env {
+        name  = "BUDGET_PUSH_AUDIENCE"
+        value = local.budget_audience
+      }
+      env {
+        name  = "BUDGET_PUSH_SA"
+        value = google_service_account.budget_push.email
       }
       env {
         name = "INDICATOR_PEPPER"

@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getToken, initializeAppCheck, ReCaptchaEnterpriseProvider, type AppCheck } from "firebase/app-check";
 import { getAuth, onAuthStateChanged, signInAnonymously, type User } from "firebase/auth";
 
 export const app = initializeApp({
@@ -7,6 +8,24 @@ export const app = initializeApp({
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 });
+
+// App Check (reCAPTCHA Enterprise, invisible): proves requests come from this web
+// app, so scripts can't burn the project's AI quota. Initialised before Auth so
+// anonymous sign-up is attested too.
+const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
+export const appCheck: AppCheck | null = siteKey
+  ? initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(siteKey), isTokenAutoRefreshEnabled: true })
+  : null;
+
+export async function appCheckToken(): Promise<string | undefined> {
+  if (!appCheck) return undefined;
+  try {
+    return (await getToken(appCheck, false)).token;
+  } catch (e) {
+    console.warn("App Check token unavailable", e);
+    return undefined;
+  }
+}
 
 export const auth = getAuth(app);
 

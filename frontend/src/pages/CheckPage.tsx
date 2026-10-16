@@ -96,7 +96,7 @@ export default function CheckPage() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={5}
-          maxLength={8000}
+          maxLength={4000}
           placeholder={t("placeholder")}
           className="w-full resize-y rounded-xl border border-brand-100 bg-brand-50/40 p-4 text-base outline-none placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100"
         />

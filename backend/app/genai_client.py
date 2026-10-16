@@ -52,10 +52,13 @@ async def generate(model: str, contents, config: types.GenerateContentConfig) ->
 
 
 def json_config(schema: dict, *, system: str | None = None, thinking: str = "LOW",
-                temperature: float = 0.2, tools: list | None = None) -> types.GenerateContentConfig:
+                temperature: float = 0.2, tools: list | None = None,
+                max_tokens: int = 2048) -> types.GenerateContentConfig:
+    """Structured-output config. `max_tokens` is a hard ceiling on billed output."""
     return types.GenerateContentConfig(
         system_instruction=system,
         temperature=temperature,
+        max_output_tokens=max_tokens,
         response_mime_type="application/json",
         response_json_schema=schema,
         thinking_config=types.ThinkingConfig(thinking_level=thinking),

@@ -65,7 +65,8 @@ async def generate() -> dict:
     resp = await genai_client.generate(
         model=s.model_flash,
         contents="Community intelligence (redacted, last 14 days):\n" + json.dumps(payload, default=str),
-        config=genai_client.json_config(SCHEMA, system=SYSTEM, thinking="MEDIUM", temperature=0.3),
+        config=genai_client.json_config(SCHEMA, system=SYSTEM, thinking="MEDIUM", temperature=0.3,
+                                        max_tokens=4096),
     )
     bulletin = genai_client.parse_json(resp)
     bulletin["basedOn"] = {"reports": len(reports), "campaigns": len(campaigns)}

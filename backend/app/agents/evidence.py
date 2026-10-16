@@ -39,6 +39,7 @@ async def grounded_check(*, context: str, domains: list[str], lang: str) -> dict
         config=types.GenerateContentConfig(
             tools=[types.Tool(google_search=types.GoogleSearch())],
             temperature=0.1,
+            max_output_tokens=1024,
             thinking_config=types.ThinkingConfig(thinking_level="LOW"),
         ),
     )

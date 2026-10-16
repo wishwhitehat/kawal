@@ -27,5 +27,6 @@ target.write_text(
     f"VITE_FIREBASE_AUTH_DOMAIN={cfg['authDomain']}\n"
     f"VITE_FIREBASE_PROJECT_ID={cfg['projectId']}\n"
     f"VITE_FIREBASE_APP_ID={cfg['appId']}\n"
+    f"VITE_RECAPTCHA_SITE_KEY={cfg.get('siteKey', '')}\n"
 )
 print(f"wrote {target.relative_to(root)}")
