@@ -1,0 +1,56 @@
+erDiagram
+  REPORT }o--|| CAMPAIGN : "belongs to"
+  REPORT }o--o{ INDICATOR : "mentions (by fingerprint)"
+  REPORT ||--|| FEED_ITEM : "publishes"
+  LIVE_SESSION ||--o| REPORT : "may create"
+
+  REPORT {
+    timestamp createdAt
+    timestamp expireAt "TTL 180d"
+    string verdict
+    int riskScore
+    string scamType
+    string channel
+    string country
+    string summary "redacted EN"
+    string[] tactics
+    string killChainStage
+    vector embedding "768-d"
+    string[] indicatorFps "HMAC"
+    string campaignId
+    bool synthetic
+  }
+  INDICATOR {
+    string fp PK "HMAC-SHA256"
+    string kind "phone|account|domain|email|wallet"
+    string masked "+6011******89"
+    int count
+    map countries
+    map scamTypes
+  }
+  CAMPAIGN {
+    string id PK
+    string title
+    string scamType
+    int count
+    map countries
+    map channels
+    string[] tactics
+    timestamp firstSeen
+    timestamp lastSeen
+  }
+  FEED_ITEM {
+    timestamp createdAt
+    timestamp expireAt "TTL 30d"
+    string headline
+    string country
+    int riskScore
+  }
+  LIVE_SESSION {
+    timestamp startedAt
+    int durationS
+    int maxRisk
+    string verdict
+    string[] tactics
+    string summary "redacted"
+  }

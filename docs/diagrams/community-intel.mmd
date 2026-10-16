@@ -1,0 +1,13 @@
+flowchart TB
+  R["Triage result"] --> X["Extract indicators<br/>regex + model-read values"]
+  X --> N["Normalise<br/>(E.164 phones, domains, accounts)"]
+  N --> H["HMAC-SHA256(pepper, kind:value)<br/>pepper in Secret Manager"]
+  H --> IDX[("indicators/{fp}<br/>count · countries · masked label")]
+
+  R --> EMB["gemini-embedding-2<br/>768-d of type + pattern + summary"]
+  EMB --> KNN["Firestore find_nearest<br/>COSINE, k=5"]
+  KNN --> D{"distance ≤ 0.20 same type<br/>or ≤ 0.12 any type?"}
+  D -->|yes| JOIN["Join campaign"]
+  D -->|no| NEW["New campaign<br/>title = pattern_name"]
+  JOIN --> C[("campaigns/{id}")]
+  NEW --> C

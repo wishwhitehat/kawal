@@ -150,7 +150,10 @@ class LiveGuardian:
         if r >= 70 and time.time() - self.last_alert > 25:
             self.last_alert = time.time()
             self.alerts += 1
-            await self.emit({"type": "alert", "risk": r, "text": text or self.deep.get("advice") or "",
+            # Only borrow the deep scorer's advice if it agrees the call is high-risk.
+            deep_agrees = int(self.deep.get("risk_score", 0)) >= 70
+            advice = text or (self.deep.get("advice") if deep_agrees else "") or ""
+            await self.emit({"type": "alert", "risk": r, "text": advice,
                              "hotline": hotline(self.country)})
 
     def live_config(self) -> types.LiveConnectConfig:
@@ -164,6 +167,8 @@ class LiveGuardian:
             # Lets the model decide NOT to respond - essential for a silent listener.
             proactivity=types.ProactivityConfig(proactive_audio=True),
             realtime_input_config=types.RealtimeInputConfig(
+                # The caller keeps talking over warnings; Kawal must finish its sentence.
+                activity_handling=types.ActivityHandling.NO_INTERRUPTION,
                 automatic_activity_detection=types.AutomaticActivityDetection(
                     start_of_speech_sensitivity=types.StartSensitivity.START_SENSITIVITY_HIGH,
                     end_of_speech_sensitivity=types.EndSensitivity.END_SENSITIVITY_HIGH,
@@ -265,7 +270,7 @@ class LiveGuardian:
                              "liveRisk": self.live_risk, "scamType": scam_type, "scamTypeLabel": SCAM_TYPES[scam_type],
                              "stage": clamp_enum(self.deep.get("stage"), KILL_CHAIN_IDS, "contact"),
                              "claims": self.deep.get("caller_claims_to_be", ""), "advice": self.deep.get("advice", "")})
-            await self.maybe_alert(self.deep.get("advice"))
+            await self.maybe_alert()
 
     async def summarise(self) -> None:
         text = " ".join(self.transcript).strip()

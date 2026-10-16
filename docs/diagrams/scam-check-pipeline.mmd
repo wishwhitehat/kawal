@@ -1,0 +1,18 @@
+flowchart LR
+  IN["Input<br/>text · image · PDF · audio"] --> T
+  IN -. "text present" .-> E
+
+  subgraph Agents
+    T["🧠 Triage agent<br/>Gemini 3.8 Flash<br/>multimodal + JSON schema"]
+    E["🌐 Evidence agent<br/>Flash-Lite + Google Search grounding<br/>+ Web Risk lookups"]
+    I["🕸️ Intel agent<br/>HMAC fingerprints · embeddings<br/>Firestore KNN · campaign assignment"]
+    A["📞 Advice<br/>deterministic hotline table<br/>+ tailored steps"]
+  end
+
+  T -->|"verdict, tactics, indicators,<br/>kill-chain, summary_en"| I
+  T -. "media-only input" .-> E
+  T --> A
+  E --> OUT
+  I --> OUT
+  A --> OUT
+  OUT["Result card<br/>+ optional redacted share"] --> DB[("Firestore")]

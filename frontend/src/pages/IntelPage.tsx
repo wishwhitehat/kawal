@@ -9,6 +9,7 @@ import { askIntel, getOverview, makeBulletin } from "../lib/api";
 import { ensureUser } from "../lib/firebase";
 import { db } from "../lib/firestore";
 import { usePrefs } from "../lib/prefs";
+import { plain } from "../lib/text";
 import type { Bulletin, Campaign, FeedItem, Lang, Overview } from "../lib/types";
 
 const TYPE_LABEL: Record<string, string> = {
@@ -388,7 +389,7 @@ function AskPanel() {
       {err && <p className="mt-3 text-sm text-red-700">{err}</p>}
       {ans && (
         <div className="slide-in mt-4 space-y-3">
-          <div className="whitespace-pre-wrap rounded-xl bg-brand-50/60 p-4 text-sm leading-relaxed text-slate-800">{ans.answer.replace(/\*\*/g, "")}</div>
+          <div className="whitespace-pre-wrap rounded-xl bg-brand-50/60 p-4 text-sm leading-relaxed text-slate-800">{plain(ans.answer)}</div>
           {ans.trace.length > 0 && (
             <details className="rounded-xl border border-slate-200 p-3 text-sm">
               <summary className="cursor-pointer font-semibold text-slate-700">{t("howGot")} ({ans.trace.length} tool calls)</summary>

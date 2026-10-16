@@ -1,0 +1,15 @@
+flowchart LR
+  A["🎙️ Call audio<br/>PCM 16 kHz"] --> L
+  subgraph fast["Fast path (sub-second)"]
+    L["Gemini 3.8 Live<br/>native audio"]
+    L -->|"input transcription"| TR["Transcript"]
+    L -->|"tool call: flag_scam_signal<br/>(tactic, quote, risk)"| SIG["Signals"]
+    L -->|"spoken warning<br/>(gated: risk ≥ 60)"| VOICE["🔊 Warning audio"]
+  end
+  subgraph deep["Deep path (every 2.5 s)"]
+    TR --> S["Gemini 3.5 Flash-Lite<br/>structured re-score"]
+    S --> R["risk · scam type · stage<br/>caller claims · advice"]
+  end
+  SIG --> M{{"risk = max(live, deep)"}}
+  R --> M
+  M -->|"≥ 70"| ALERT["🚨 Full-screen alert<br/>+ hotline button"]
