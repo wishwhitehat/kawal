@@ -42,7 +42,7 @@ Google Cloud **AI Builder Cup 2026** · Track: **BFSI - Intelligent Risk, Fraud 
 | **API (Cloud Run)** | https://kawal-api-gb6wisvuia-as.a.run.app/api/health · [OpenAPI docs](https://kawal-api-gb6wisvuia-as.a.run.app/api/docs) |
 | **Demo video** | _added at submission_ |
 | **Pitch deck content** | [docs/PITCH_DECK.md](docs/PITCH_DECK.md) · [demo script](docs/DEMO_SCRIPT.md) · [submission text](docs/SUBMISSION.md) |
-| **Architecture deep-dive** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| **Architecture deep-dive** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [cost & abuse controls](docs/COST_CONTROLS.md) · [handover guide](docs/HANDOVER.md) |
 | **Benchmarks** | [docs/BENCHMARK.md](docs/BENCHMARK.md) |
 
 > **Try it in 30 seconds:** open the live demo → **Live Call Guardian** → *Try a sample scam call* → **Start guarding**.
@@ -68,10 +68,10 @@ Google Cloud **AI Builder Cup 2026** · Track: **BFSI - Intelligent Risk, Fraud 
 | **Gemini 3.8 Live** | Real-time call listening over a bidirectional stream: input transcription, `flag_scam_signal` tool calls, proactive (silent-by-default) spoken warnings. |
 | **Gemini 3.5 Flash-Lite** | Fast paths: Google Search **grounding** (~3 s, parallel with triage) and live transcript re-scoring every 2.5 s. |
 | **Gemini embeddings / TTS** | `gemini-embedding-2` (768-d) clusters reports into campaigns; `gemini-3.8-flash-tts` reads verdicts aloud and voiced the multi-language sample calls. |
-| **Cloud Run** | FastAPI service (Singapore): Server-Sent Events for the agent pipeline, a WebSocket bridge to Gemini Live, min-instance 1, least-privilege service account. |
+| **Cloud Run** | FastAPI service (Singapore): Server-Sent Events for the agent pipeline, a WebSocket bridge to Gemini Live, scale-to-zero, least-privilege service account, budget circuit-breaker endpoint. |
 | **Firestore** | Redacted reports + **KNN vector index**, HMAC-fingerprinted indicators, campaigns, stats, live feed; **TTL** policies for data minimisation; **real-time listeners** drive the console. |
-| **Firebase** | **Hosting** (CSP-hardened SPA), **Authentication** (anonymous sign-in → every API call carries a verified ID token), **Security Rules** (browsers are read-only on aggregated data). |
-| **Also** | Web Risk API, Secret Manager, Artifact Registry, Cloud Build, Cloud Monitoring uptime check, billing budget alert, API-key restrictions - all in [Terraform](infra/). |
+| **Firebase** | **Hosting** (CSP-hardened SPA), **Authentication** (anonymous sign-in → every API call carries a verified ID token), **App Check** (reCAPTCHA Enterprise) on API, Firestore and Auth, **Security Rules** (browsers are read-only on aggregated data). |
+| **Also** | Web Risk API, Secret Manager, Pub/Sub (budget breaker), Artifact Registry, Cloud Build, Cloud Monitoring alerts, billing budget, reCAPTCHA Enterprise, API-key restrictions - all in [Terraform](infra/). |
 
 ## Architecture
 
@@ -180,13 +180,29 @@ Measured on the deployed stack on 16 Oct 2026 - method, raw output and caveats i
 | **Full-screen alert** | **Intel Console** |
 | ![Scam alert](docs/images/ui-alert.png) | ![Intel Console](docs/images/ui-intel.png) |
 
+## Cost & abuse controls (open source, near-zero bill)
+
+The API is public, so every AI feature sits behind layered guard-rails - details in
+[docs/COST_CONTROLS.md](docs/COST_CONTROLS.md):
+
+- **Firebase App Check** (invisible reCAPTCHA Enterprise) on the API, Firestore and Auth - scripts and copies of the
+  frontend can't spend our quota.
+- **Daily ceilings** (global, per user, per hashed IP) in Firestore bound the worst-case daily model spend; usage is
+  public at `/api/usage`.
+- **Budget circuit breaker:** Cloud Billing budget (MYR 20) → Pub/Sub → kill switch that pauses AI features and
+  auto-resumes next month. E-mail alerts at 25-100 %, on breaker trips, abuse spikes and downtime.
+- **Context trimming & caching:** input caps with magic-byte sniffing, `max_output_tokens` everywhere, 150 s live
+  sessions, 24 h result cache, bulletin reuse.
+- **Scale to zero:** Cloud Run min 0 / max 2 - typical bill **≈ MYR 0-5 / month**.
+
 ## Privacy & security
 
 - **Nothing personal is stored.** Messages, screenshots, audio and transcripts are processed in memory only.
 - **Indicators become fingerprints.** Phone numbers, bank accounts and wallets are stored only as HMAC-SHA256 fingerprints (pepper in Secret Manager) with masked labels like `+6011******89`.
 - **Data minimisation.** Shared reports are redacted English summaries that expire after 180 days (Firestore TTL); feed items after 30 days.
 - **Least privilege.** Cloud Run runs as a dedicated service account (Vertex AI user, Datastore user, …) - no API keys in the backend. The browser API key is restricted to our domains and to Firebase APIs.
-- **Defence in depth.** Firebase ID tokens on every API call and WebSocket, origin checks, per-user rate limits, upload type/size limits, prompt-injection guards, strict CSP / HSTS headers, read-only Firestore rules.
+- **Defence in depth.** App Check + Firebase ID tokens on every API call and WebSocket, origin checks, rate limits and daily quotas, upload type/size limits with content sniffing, prompt-injection guards, strict CSP / HSTS headers, read-only Firestore rules.
+- **Repo hygiene.** gitleaks scan of all history (clean), pre-commit secret hook, GitHub secret scanning with push protection, Dependabot alerts, protected `main`.
 
 See [SECURITY.md](SECURITY.md) for the threat model and how to report a vulnerability.
 

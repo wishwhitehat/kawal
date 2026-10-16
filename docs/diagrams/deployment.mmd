@@ -1,7 +1,7 @@
 flowchart TB
   subgraph gcp["Google Cloud project"]
     subgraph sg["asia-southeast1 (Singapore)"]
-      RUN["Cloud Run: kawal-api<br/>min 1 / max 4 · 1 vCPU · 1 GiB<br/>timeout 3600 s · session affinity"]
+      RUN["Cloud Run: kawal-api<br/>min 0 / max 2 · 1 vCPU · 512 MiB<br/>timeout 3600 s · session affinity"]
       AR["Artifact Registry: kawal"]
       FS[("Firestore (default)<br/>vector index · TTL · rules")]
       SM["Secret Manager<br/>kawal-indicator-pepper"]
@@ -9,9 +9,11 @@ flowchart TB
     subgraph glob["Global"]
       HOST["Firebase Hosting: kawal-ai.web.app<br/>CSP · HSTS"]
       AUTH["Identity Platform<br/>anonymous sign-in"]
+      APPC["App Check<br/>reCAPTCHA Enterprise"]
+      PS["Pub/Sub: kawal-budget<br/>→ budget breaker"]
       KEY["API key (browser)<br/>referrer + API restricted"]
       VX["Vertex AI: Gemini (global)"]
-      MON["Uptime check · budget alert"]
+      MON["Uptime check · alert policies<br/>budget MYR 20"]
     end
     VXL["Vertex AI: Gemini Live (us-central1)"]
     CB["Cloud Build"]
@@ -24,4 +26,7 @@ flowchart TB
   RUN --> FS & VX & VXL
   SM -. "env secret" .-> RUN
   HOST --> RUN
+  HOST -. "attest" .-> APPC
+  MON -. "budget events" .-> PS
+  PS -->|"OIDC push"| RUN
   TF -.-> gcp

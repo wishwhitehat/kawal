@@ -16,8 +16,10 @@ its vector index).
 | Firebase project, web app, Hosting site | Web app hosting; `kawal-ai.web.app` by default |
 | Identity Platform config | Anonymous sign-in, authorised domains |
 | Restricted browser API key | Only our origins; only Identity Toolkit, Secure Token, Firestore, Installations |
-| Cloud Run service `kawal-api` | API + WebSockets; min 1 instance (no cold starts while judging), max 4 |
-| Uptime check + optional budget | `/api/health` every 5 min; monthly budget alerts at 50 / 90 / 100 % |
+| Cloud Run service `kawal-api` | API + WebSockets; scale to zero, max 2 instances, 512 MiB |
+| App Check | reCAPTCHA Enterprise key, App Check registration, enforcement on Firestore + Auth |
+| Budget + circuit breaker | Budget (MYR 20 default) → Pub/Sub → `/internal/budget` kill switch |
+| Monitoring | uptime check every 15 min; alerts for budget breaker, abuse spikes, downtime |
 
 ## Prerequisites
 
@@ -32,7 +34,8 @@ its vector index).
 ```bash
 export PROJECT_ID=your-project-id
 cp infra/terraform.tfvars.example infra/terraform.tfvars
-# edit: project_id, optionally billing_account (enables the budget alert) and hosting_site_id
+# edit: project_id, billing_account (enables budget + circuit breaker), alert_email,
+#       optionally hosting_site_id and appcheck_debug_token (a UUID, for headless tests only)
 ```
 
 `hosting_site_id` becomes `<id>.web.app` and must be globally unique.
@@ -105,9 +108,8 @@ python scripts/generate_sample_calls.py --project $PROJECT_ID   # Gemini TTS, ne
 
 ## Costs
 
-At prototype traffic the bill is dominated by one always-warm Cloud Run instance (≈ USD 10-15 / month with CPU
-throttling) plus per-request Gemini usage. Set `min_instances = 0` in `terraform.tfvars` to scale to zero after
-judging. See the cost estimate in [PITCH_DECK.md](PITCH_DECK.md#slide-10--estimated-implementation-cost).
+Typical bill ≈ MYR 0-5 / month (Cloud Run scales to zero; everything else sits in free tiers; Gemini at demo
+traffic). Ceilings, alerts and the budget circuit breaker are described in [COST_CONTROLS.md](COST_CONTROLS.md).
 
 ## Tear down
 

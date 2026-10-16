@@ -159,14 +159,14 @@ Talking points:
 *Estimates from public list prices at the time of writing; verify with the Google Cloud pricing calculator.
 Gemini costs scale with tokens - figures below assume our measured prompt sizes.*
 
-**Prototype (current deployment)**
+**Prototype (current deployment) - engineered for near-zero cost**
 
 | Item | Monthly |
 |---|---|
-| Cloud Run - 1 warm instance (1 vCPU / 1 GiB, CPU throttled) | ≈ USD 10-15 |
-| Firestore, Hosting, Auth, Secret Manager, Artifact Registry | ≈ USD 0-5 (mostly free tier) |
-| Gemini usage at demo volume (≈ 2,000 checks + 300 call-minutes) | ≈ USD 20-60 |
-| **Total** | **≈ USD 30-80 / month** (budget alert set at MYR 200) |
+| Cloud Run (scale to zero), Firestore, Hosting, Auth, Pub/Sub, Secret Manager, reCAPTCHA, Web Risk | ≈ MYR 0 (free tiers) |
+| Gemini at judging traffic (tens of checks / calls a day) | ≈ MYR 1-5 |
+| **Typical total** | **≈ MYR 0-5 / month** |
+| **Hard ceiling** | daily per-feature quotas + MYR 20 budget circuit breaker (auto-pause) ≈ MYR 35 worst case |
 
 **Unit economics (production)**
 

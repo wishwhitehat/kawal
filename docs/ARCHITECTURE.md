@@ -241,7 +241,7 @@ estimated loss averted) and `bulletins/*` the generated bulletins.
 flowchart TB
   subgraph gcp["Google Cloud project"]
     subgraph sg["asia-southeast1 (Singapore)"]
-      RUN["Cloud Run: kawal-api<br/>min 1 / max 4 · 1 vCPU · 1 GiB<br/>timeout 3600 s · session affinity"]
+      RUN["Cloud Run: kawal-api<br/>min 0 / max 2 · 1 vCPU · 512 MiB<br/>timeout 3600 s · session affinity"]
       AR["Artifact Registry: kawal"]
       FS[("Firestore (default)<br/>vector index · TTL · rules")]
       SM["Secret Manager<br/>kawal-indicator-pepper"]
@@ -249,9 +249,11 @@ flowchart TB
     subgraph glob["Global"]
       HOST["Firebase Hosting: kawal-ai.web.app<br/>CSP · HSTS"]
       AUTH["Identity Platform<br/>anonymous sign-in"]
+      APPC["App Check<br/>reCAPTCHA Enterprise"]
+      PS["Pub/Sub: kawal-budget<br/>→ budget breaker"]
       KEY["API key (browser)<br/>referrer + API restricted"]
       VX["Vertex AI: Gemini (global)"]
-      MON["Uptime check · budget alert"]
+      MON["Uptime check · alert policies<br/>budget MYR 20"]
     end
     VXL["Vertex AI: Gemini Live (us-central1)"]
     CB["Cloud Build"]
@@ -264,6 +266,9 @@ flowchart TB
   RUN --> FS & VX & VXL
   SM -. "env secret" .-> RUN
   HOST --> RUN
+  HOST -. "attest" .-> APPC
+  MON -. "budget events" .-> PS
+  PS -->|"OIDC push"| RUN
   TF -.-> gcp
 ```
 
@@ -274,7 +279,7 @@ env from Terraform outputs and deploys Hosting. Details: [DEPLOYMENT.md](DEPLOYM
 
 | Threat | Mitigation |
 |---|---|
-| Anyone calling the API / burning Gemini quota | Firebase ID token required on every call and WebSocket; per-uid rate limits; Cloud Run max instances; budget alert. |
+| Anyone calling the API / burning Gemini quota | App Check (reCAPTCHA Enterprise) + Firebase ID token on every call and WebSocket; per-minute limits; daily global / user / IP quotas; result caching; budget circuit breaker; Cloud Run max instances. See [COST_CONTROLS.md](COST_CONTROLS.md). |
 | Cross-site WebSocket hijacking | `Origin` must match the hosting domains; token sent in the first frame (never in the URL). |
 | Leaking victims' data | Raw content never stored; HMAC fingerprints; redacted summaries; TTL; Firestore rules deny all client writes and all reads of reports/indicators/sessions. |
 | Leaked credentials in a public repo | No service-account keys or API keys in code; Cloud Run uses its identity; browser key is restricted; `.gitignore` covers env/tfvars/state/keys. |
