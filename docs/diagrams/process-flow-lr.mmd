@@ -1,0 +1,16 @@
+flowchart LR
+  A([Suspicious call<br/>or message]) --> B{Channel?}
+  B -->|Phone call| C[Speakerphone →<br/>Live Call Guardian]
+  B -->|SMS · WhatsApp · link<br/>screenshot · voice note| D[Scam Check]
+  C --> E[Gemini 3.8 Live<br/>flags tactics in real time]
+  E --> F{Risk ≥ 70?}
+  F -->|no| E
+  F -->|yes| G[Full-screen alert +<br/>spoken warning]
+  D --> I[Triage · Evidence ·<br/>Community-intel agents]
+  I --> J[Verdict · red flags ·<br/>kill-chain · sources]
+  G --> H[One-tap hotline<br/>hang up · don't transfer]
+  J --> H
+  H --> K[(Redacted report<br/>Firestore)]
+  K --> L[Campaign clustering<br/>vector search]
+  L --> M[Bank / regulator console<br/>bulletins · Ask Intel]
+  M --> N[Bank controls<br/>step-up · cooling-off · mule blocks]
