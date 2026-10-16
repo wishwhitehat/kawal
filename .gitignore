@@ -1,0 +1,42 @@
+# --- secrets & local config (never commit) ---
+.env
+.env.*
+!.env.example
+*.tfvars
+!*.tfvars.example
+*.pem
+*.key
+*-key.json
+*service-account*.json
+credentials.json
+adc.json
+application_default_credentials.json
+
+# --- terraform ---
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+crash.log
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# --- node / web ---
+node_modules/
+dist/
+*.local
+
+# --- firebase ---
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+
+# --- os / editors ---
+.DS_Store
+.idea/
+.vscode/

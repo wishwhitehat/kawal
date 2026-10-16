@@ -1,0 +1,29 @@
+rules_version = '2';
+
+// Browsers can only READ aggregated, redacted intel. Every write goes through
+// the Kawal API (Admin SDK on Cloud Run), which is not subject to these rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    match /campaigns/{id} {
+      allow read: if signedIn();
+    }
+    match /stats/{id} {
+      allow read: if signedIn();
+    }
+    match /feed/{id} {
+      allow read: if signedIn();
+    }
+    match /bulletins/{id} {
+      allow read: if signedIn();
+    }
+
+    // reports, indicators, liveSessions: server-only.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
