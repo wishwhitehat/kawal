@@ -7,6 +7,7 @@ locals {
     "cloudbuild.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "firebase.googleapis.com",
+    "firebaseappcheck.googleapis.com",
     "firebasehosting.googleapis.com",
     "firebaserules.googleapis.com",
     "firestore.googleapis.com",
@@ -14,6 +15,8 @@ locals {
     "identitytoolkit.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
+    "pubsub.googleapis.com",
+    "recaptchaenterprise.googleapis.com",
     "run.googleapis.com",
     "secretmanager.googleapis.com",
     "securetoken.googleapis.com",
@@ -117,7 +120,7 @@ resource "google_artifact_registry_repository" "kawal" {
     id     = "keep-recent"
     action = "KEEP"
     most_recent_versions {
-      keep_count = 10
+      keep_count = 3
     }
   }
   depends_on = [google_project_service.apis]

@@ -25,10 +25,10 @@ import logging
 import re
 import time
 
-from fastapi import WebSocket, WebSocketDisconnect
+from fastapi import HTTPException, WebSocket, WebSocketDisconnect
 from google.genai import types
 
-from . import genai_client, store
+from . import genai_client, guard, store
 from .agents import intel
 from .auth import limiter, verify_token
 from .config import get_settings
@@ -133,6 +133,7 @@ class LiveGuardian:
         self.last_alert = 0.0
         self.alerts = 0
         self.said = ""
+        self.scores = 0
         self.started = time.time()
         self.stopping = asyncio.Event()
 
@@ -242,15 +243,16 @@ class LiveGuardian:
         """Deep path: re-score the transcript whenever it has grown."""
         system = SCORE_SYSTEM.replace("{lang}", LANGS.get(self.lang, "English"))
         while not self.stopping.is_set():
-            await asyncio.sleep(2.5)
+            await asyncio.sleep(self.s.live_score_interval)
             text = " ".join(self.transcript)
-            if len(text) - self.scored_len < 25:
+            if len(text) - self.scored_len < 25 or self.scores >= self.s.live_max_scores:
                 continue
             self.scored_len = len(text)
+            self.scores += 1
             try:
                 resp = await genai_client.generate(
-                    self.s.model_lite, f"Live call transcript so far:\n{text[-6000:]}",
-                    genai_client.json_config(SCORE_SCHEMA, system=system, thinking="MINIMAL"))
+                    self.s.model_lite, f"Live call transcript so far:\n{text[-self.s.live_window_chars:]}",
+                    genai_client.json_config(SCORE_SCHEMA, system=system, thinking="MINIMAL", max_tokens=1024))
                 self.deep = genai_client.parse_json(resp)
             except Exception:
                 log.exception("deep scorer failed")
@@ -280,10 +282,11 @@ class LiveGuardian:
             return
         resp = await genai_client.generate(
             self.s.model_lite,
-            (f"Phone call transcript:\n{text[-8000:]}\nTactics flagged live: {list(self.flags)}. "
+            (f"Phone call transcript:\n{text[-(self.s.live_window_chars + 1000):]}\n"
+             f"Tactics flagged live: {list(self.flags)}. "
                       f"Peak risk {self.max_risk}. Write user_message and headline in {LANGS.get(self.lang)}; "
                       "summary_en and pattern_name in generic English without names or numbers."),
-            genai_client.json_config(SUMMARY_SCHEMA, thinking="LOW"))
+            genai_client.json_config(SUMMARY_SCHEMA, thinking="LOW", max_tokens=1024))
         out = genai_client.parse_json(resp)
         scam_type = clamp_enum(out.get("scam_type"), SCAM_TYPES, "other")
         duration = round(time.time() - self.started)
@@ -344,9 +347,17 @@ async def handle(ws: WebSocket) -> None:
     try:
         start = json.loads(await asyncio.wait_for(ws.receive_text(), timeout=10))
         user = verify_token(start.get("token"))
-        limiter.check(f"live:{user.uid}", 8, window=600)
+        guard.verify_app_check(start.get("appCheck"))
+        await guard.ensure_open()
+        limiter.check(f"live:{user.uid}", 3, window=60)
+        await guard.consume("live", user.uid, guard.client_ip(ws.headers))
+    except HTTPException as exc:
+        detail = exc.detail if isinstance(exc.detail, dict) else {"message": str(exc.detail)}
+        await ws.send_text(json.dumps({"type": "error", **detail}))
+        await ws.close(code=1008)
+        return
     except Exception:
-        await ws.send_text(json.dumps({"type": "error", "message": "Unauthorized or rate limited"}))
+        await ws.send_text(json.dumps({"type": "error", "message": "Unauthorized"}))
         await ws.close(code=1008)
         return
     lang = clamp_enum(start.get("lang"), LANGS, "en")

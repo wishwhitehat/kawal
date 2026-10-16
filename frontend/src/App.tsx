@@ -2,6 +2,7 @@ import { Building2, Info, MessageSquareWarning, PhoneCall, Type } from "lucide-r
 import { lazy, Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { COUNTRIES, Logo, Spinner } from "./components/ui";
+import { getUsage, warmUp } from "./lib/api";
 import { ensureUser } from "./lib/firebase";
 import { LANG_LABELS } from "./lib/i18n";
 import { usePrefs } from "./lib/prefs";
@@ -33,8 +34,11 @@ export default function App() {
   const { t, lang, setLang, country, setCountry, elder, setElder } = usePrefs();
   const [route, go] = useRoute();
 
+  const [paused, setPaused] = useState<string | null>(null);
   useEffect(() => {
+    warmUp();
     ensureUser().catch((e) => console.error("anonymous sign-in failed", e));
+    getUsage().then((u) => u?.paused && setPaused(u.reason || "Budget limit reached"));
   }, []);
 
   const nav = [
@@ -110,6 +114,12 @@ export default function App() {
         </div>
       </header>
 
+      {paused && (
+        <div role="status" className="bg-amber-100 px-4 py-2 text-center text-sm font-semibold text-amber-900">
+          Kawal's AI features are paused to stay within this demo's budget ({paused}). The source code is open - you
+          can run your own copy.
+        </div>
+      )}
       <main className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
         <ErrorBoundary key={route}>
         <Suspense fallback={<div className="flex justify-center py-20 text-brand-700"><Spinner className="h-8 w-8" /></div>}>

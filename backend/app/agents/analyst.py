@@ -20,6 +20,8 @@ log = logging.getLogger(__name__)
 
 SYSTEM = """You are Kawal Intel, an assistant for bank fraud teams and regulators in Asia-Pacific.
 Answer ONLY from tool results; call tools before answering. If data is insufficient, say so.
+Only answer questions about scams, fraud and this intelligence data. For anything else (general chat,
+coding, essays, other topics) reply exactly: "I can only answer questions about Kawal's scam intelligence."
 Be concise: a direct answer first, then up to 5 bullet points with numbers. Never reveal raw personal data;
 indicators are masked. Mention that community data is unverified user reports where relevant.
 Scam type ids: """ + ", ".join(SCAM_TYPES)
@@ -83,10 +85,11 @@ async def ask(question: str) -> dict:
     s = get_settings()
     contents: list[types.Content] = [types.Content(role="user", parts=[types.Part.from_text(text=question)])]
     config = types.GenerateContentConfig(system_instruction=SYSTEM, tools=TOOLS, temperature=0.2,
+                                         max_output_tokens=2048,
                                          thinking_config=types.ThinkingConfig(thinking_level="LOW"),
                                          automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True))
     trace = []
-    for _ in range(5):
+    for _ in range(4):  # bounded tool rounds = bounded cost
         resp = await genai_client.generate(s.model_flash, contents, config)
         calls = resp.function_calls or []
         if not calls:
@@ -99,8 +102,9 @@ async def ask(question: str) -> dict:
             except Exception as exc:
                 log.exception("tool %s failed", fc.name)
                 result = {"error": type(exc).__name__}
-            preview = json.dumps(result, default=str, ensure_ascii=False)
+            # Context trimming: tool results are capped before going back to the model.
+            preview = json.dumps(result, default=str, ensure_ascii=False)[:3000]
             trace.append({"tool": fc.name, "args": dict(fc.args or {}), "preview": preview[:240]})
-            parts.append(types.Part.from_function_response(name=fc.name, response={"result": json.loads(preview)}))
+            parts.append(types.Part.from_function_response(name=fc.name, response={"result": preview}))
         contents.append(types.Content(role="user", parts=parts))
     return {"answer": "I could not complete this analysis in time. Try a narrower question.", "trace": trace}

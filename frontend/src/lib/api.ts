@@ -1,4 +1,4 @@
-import { idToken } from "./firebase";
+import { appCheckToken, idToken } from "./firebase";
 import type { Bulletin, CheckResult, Overview, StageEvent } from "./types";
 
 export const API_BASE = (import.meta.env.VITE_API_BASE as string).replace(/\/$/, "");
@@ -10,15 +10,15 @@ export class ApiError extends Error {
 }
 
 async function authed(path: string, init: RequestInit = {}): Promise<Response> {
-  const token = await idToken();
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: { ...(init.headers || {}), Authorization: `Bearer ${token}` },
-  });
+  const [token, appCheck] = await Promise.all([idToken(), appCheckToken()]);
+  const headers: Record<string, string> = { ...(init.headers as Record<string, string>), Authorization: `Bearer ${token}` };
+  if (appCheck) headers["X-Firebase-AppCheck"] = appCheck;
+  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
   if (!res.ok) {
     let msg = res.statusText;
     try {
-      msg = (await res.json()).detail ?? msg;
+      const detail = (await res.json()).detail;
+      msg = typeof detail === "string" ? detail : detail?.message ?? msg;
     } catch {
       /* not JSON */
     }
@@ -26,6 +26,16 @@ async function authed(path: string, init: RequestInit = {}): Promise<Response> {
   }
   return res;
 }
+
+/** Wake the scale-to-zero API while the user is still reading the page. */
+export function warmUp() {
+  fetch(`${API_BASE}/api/health`, { mode: "cors" }).catch(() => {});
+}
+
+export const getUsage = () =>
+  fetch(`${API_BASE}/api/usage`)
+    .then((r) => r.json())
+    .catch(() => null) as Promise<{ paused: boolean; reason: string } | null>;
 
 export async function getJson<T>(path: string): Promise<T> {
   return (await authed(path)).json();

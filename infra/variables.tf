@@ -28,15 +28,15 @@ variable "api_image" {
 }
 
 variable "min_instances" {
-  description = "Warm Cloud Run instances (1 avoids cold starts during judging)."
+  description = "Warm Cloud Run instances. 0 = scale to zero (near-zero cost; the web app pre-warms the API)."
   type        = number
-  default     = 1
+  default     = 0
 }
 
 variable "max_instances" {
   description = "Upper bound on Cloud Run instances - also a cost guard-rail."
   type        = number
-  default     = 4
+  default     = 2
 }
 
 variable "extra_origins" {
@@ -52,7 +52,44 @@ variable "billing_account" {
 }
 
 variable "budget_amount" {
-  description = "Monthly budget, in the billing account's own currency, that triggers alert e-mails to billing admins."
+  description = "Monthly budget in the billing account's currency. Alerts at 25/50/75/90/100% and the kill switch engages at 100%."
   type        = number
-  default     = 200
+  default     = 20
+}
+
+variable "alert_email" {
+  description = "E-mail for budget, downtime, breaker and abuse alerts. Keep it in terraform.tfvars."
+  type        = string
+  default     = ""
+}
+
+variable "appcheck_enforce" {
+  description = "Enforce Firebase App Check on Firestore and Auth, and require it on the API."
+  type        = bool
+  default     = true
+}
+
+variable "appcheck_debug_token" {
+  description = "Optional App Check debug token (UUID) for CI / headless demo recording. Secret - tfvars only."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "global_daily" {
+  description = "Daily ceilings across ALL users - the hard cap on model spend."
+  type        = map(number)
+  default     = { check = 150, grounding = 60, live = 25, tts = 40, ask = 60, bulletin = 8 }
+}
+
+variable "user_daily" {
+  description = "Daily per-user (Firebase uid) limits."
+  type        = map(number)
+  default     = { check = 20, live = 5, tts = 10, ask = 15, bulletin = 3 }
+}
+
+variable "ip_daily" {
+  description = "Daily per-IP limits (IPs are stored only as keyed hashes)."
+  type        = map(number)
+  default     = { check = 40, live = 10, tts = 20, ask = 30, bulletin = 5 }
 }
