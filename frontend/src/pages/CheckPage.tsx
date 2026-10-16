@@ -362,7 +362,9 @@ function ResultView({ r, stages, onReset }: { r: CheckResult; stages: StageMap; 
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-        <span>{r.model?.model} · {(r.timingMs / 1000).toFixed(1)}s end-to-end</span>
+        <span>
+          {r.cached ? "⚡ Instant - identical check served from cache (no AI cost)" : `${r.model?.model} · ${(r.timingMs / 1000).toFixed(1)}s end-to-end`}
+        </span>
         <button onClick={onReset} className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-900 hover:bg-brand-50">
           <RotateCcw className="h-4 w-4" /> {t("checkAnother")} <ArrowRight className="h-4 w-4" />
         </button>

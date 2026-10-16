@@ -45,6 +45,7 @@ export interface CheckResult {
   };
   extractedText: string;
   shared: boolean;
+  cached?: boolean;
   timingMs: number;
   model: { model?: string };
 }
